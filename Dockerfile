@@ -3,7 +3,7 @@ MAINTAINER Alexander Rashed
 
 RUN pip3 install pyyaml minidb requests keyring chump pushbullet.py urlwatch
 
-RUN apt-get update && apt-get install -y cron
+RUN apt-get update && apt-get install -y cron sshpass
 
 # Put all logfiles into a volume. 
 # Workaround for bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=810669
