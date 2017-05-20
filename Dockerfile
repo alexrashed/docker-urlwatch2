@@ -18,4 +18,4 @@ ENV LANG="C.UTF-8"
 
 ENV SCHEDULE="*/15 * * * *"
 
-CMD { cat; echo "$SCHEDULE PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin && cd /config && date >> /var/log/urlwatch.log 2>&1 && urlwatch --urls urls.txt --config urlwatch.yaml --hooks hooks.py --cache /volume/cache.db >> /var/log/urlwatch.log 2>&1";} | crontab - && touch /var/log/urlwatch.log && cron && tail -f /var/log/urlwatch.log
+CMD echo "$SCHEDULE /bin/date >> /var/log/urlwatch.log 2>&1 && LANG=C.UTF-8 /usr/local/bin/urlwatch --urls /config/urls.txt --config /config/urlwatch.yaml --hooks /config/hooks.py --cache /volume/cache.db >> /var/log/urlwatch.log 2>&1" | crontab - && touch /var/log/urlwatch.log && cron && tail -f /var/log/urlwatch.log
