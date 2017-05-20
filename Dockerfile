@@ -5,7 +5,11 @@ RUN pip3 install pyyaml minidb requests keyring chump pushbullet.py urlwatch
 
 RUN apt-get update && apt-get install -y cron
 
-RUN mkdir /config && mkdir /volume && touch /var/log/urlwatch.log
+# Put all logfiles into a volume. 
+# Workaround for bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=810669
+VOLUME /var/log/
+
+RUN mkdir /config && mkdir /volume
 
 WORKDIR /config
 
@@ -14,4 +18,4 @@ ENV LANG="C.UTF-8"
 
 ENV SCHEDULE="*/15 * * * *"
 
-CMD { cat; echo "$SCHEDULE PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin && cd /config && date >> /var/log/urlwatch.log 2>&1 && urlwatch --urls urls.txt --config urlwatch.yaml --hooks hooks.py --cache /volume/cache.db >> /var/log/urlwatch.log 2>&1";} | crontab - && cron && tail -f /var/log/urlwatch.log
+CMD { cat; echo "$SCHEDULE PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin && cd /config && date >> /var/log/urlwatch.log 2>&1 && urlwatch --urls urls.txt --config urlwatch.yaml --hooks hooks.py --cache /volume/cache.db >> /var/log/urlwatch.log 2>&1";} | crontab - && touch /var/log/urlwatch.log && cron && tail -f /var/log/urlwatch.log
